@@ -1,26 +1,26 @@
-interface Title {
+export interface Title {
   id: string;
   tagName: string;
   level: number;
   text: string;
 }
 
-type VagueElement = Element | undefined | null;
-
-interface DeepSearchOptions {
+export interface DeepSearchOptions {
   noDeeperIfFound: boolean;
 }
 
-interface CatalogOptions {
+export interface CatalogOptions {
   customTitleTag?: string;
   deepSearch?: boolean | DeepSearchOptions;
 }
+
+type VagueElement = Element | undefined | null;
 
 const defaultOptions = {
   deepSearch: false,
 };
 
-export default class Catalog {
+export class Catalog {
   private wrapper: HTMLElement | null;
   private options: CatalogOptions;
   private titles: Title[] = [];
