@@ -51,7 +51,8 @@ export class Catalog {
 
     return {
       isTitle,
-      titleLevel,
+
+      titleLevel
     };
   }
 
