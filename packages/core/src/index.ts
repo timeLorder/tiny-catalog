@@ -27,7 +27,7 @@ export class Catalog {
 
   constructor(target: string | HTMLElement, options?: CatalogOptions) {
     this.wrapper =
-      typeof target === "string" ? document.querySelector(target) : target;
+      typeof target === 'string' ? document.querySelector(target) : target;
     this.options = {
       ...defaultOptions,
       ...options,
@@ -51,8 +51,7 @@ export class Catalog {
 
     return {
       isTitle,
-
-      titleLevel
+      titleLevel,
     };
   }
 
@@ -62,7 +61,7 @@ export class Catalog {
 
     let noDeeper = false;
     if (
-      typeof this.options.deepSearch === "object" &&
+      typeof this.options.deepSearch === 'object' &&
       this.options.deepSearch.noDeeperIfFound
     ) {
       for (const node of Array.from(root.children)) {
@@ -73,12 +72,12 @@ export class Catalog {
       }
     }
 
-    Array.from(root.children).forEach((node) => {
+    Array.from(root.children).forEach(node => {
       const { isTitle, titleLevel } = this.recognizeTitle(node);
 
       // ignore title tag without text content
       if (isTitle && node.textContent) {
-        const id = node.outerHTML.match(/\sid="(.*?)"/)?.[1] || "";
+        const id = node.outerHTML.match(/\sid="(.*?)"/)?.[1] || '';
         this.titles.push({
           id: encodeURIComponent(id),
           tagName: node.tagName,
