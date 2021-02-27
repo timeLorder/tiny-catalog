@@ -64,30 +64,40 @@ export class Catalog {
       typeof this.options.deepSearch === 'object' &&
       this.options.deepSearch.noDeeperIfFound
     ) {
-      for (const node of Array.from(root.children)) {
-        if (this.recognizeTitle(node).isTitle) {
+      for (
+        let i = 0, nodes = Array.prototype.slice.call(root.children);
+        i < nodes.length;
+        i++
+      ) {
+        if (this.recognizeTitle(nodes[i]).isTitle) {
           noDeeper = true;
           break;
         }
       }
     }
 
-    Array.from(root.children).forEach(node => {
-      const { isTitle, titleLevel } = this.recognizeTitle(node);
+    Array.prototype.slice
+      .call<HTMLCollection, [], Element[]>(root.children)
+      .forEach(node => {
+        const { isTitle, titleLevel } = this.recognizeTitle(node);
 
-      // ignore title tag without text content
-      if (isTitle && node.textContent) {
-        const id = node.outerHTML.match(/\sid="(.*?)"/)?.[1] || '';
-        this.titles.push({
-          id: encodeURIComponent(id),
-          tagName: node.tagName,
-          level: titleLevel,
-          text: node.textContent,
-        });
-      } else if (this.options.deepSearch && node.children.length && !noDeeper) {
-        this.searchTitles(node);
-      }
-    });
+        // ignore title tag without text content
+        if (isTitle && node.textContent) {
+          const id = node.outerHTML.match(/\sid="(.*?)"/)?.[1] || '';
+          this.titles.push({
+            id: encodeURIComponent(id),
+            tagName: node.tagName,
+            level: titleLevel,
+            text: node.textContent,
+          });
+        } else if (
+          this.options.deepSearch &&
+          node.children.length &&
+          !noDeeper
+        ) {
+          this.searchTitles(node);
+        }
+      });
   }
 
   renew() {
