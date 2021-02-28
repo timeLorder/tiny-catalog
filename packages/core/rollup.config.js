@@ -5,6 +5,7 @@ import pkg from './package.json';
 const { join } = require('path');
 
 const cwd = process.cwd();
+const input = 'src/index.ts';
 const name = 'TinyCatalogCore';
 const tsOpts = {
   cwd,
@@ -21,7 +22,6 @@ const tsOpts = {
 };
 const getBabelOpts = type => ({
   presets: [
-    require.resolve('@babel/preset-typescript'),
     [
       require.resolve('@babel/preset-env'),
       {
@@ -30,13 +30,8 @@ const getBabelOpts = type => ({
       },
     ],
   ],
-  plugins: [
-    require.resolve('@babel/plugin-proposal-optional-chaining'),
-    [
-      require.resolve('@babel/plugin-proposal-class-properties'),
-      { loose: true },
-    ],
-    ...(type === 'es'
+  plugins:
+    type === 'es'
       ? [
           [
             require.resolve('@babel/plugin-transform-runtime'),
@@ -46,8 +41,7 @@ const getBabelOpts = type => ({
             },
           ],
         ]
-      : []),
-  ],
+      : [],
   babelHelpers: type === 'es' ? 'runtime' : 'bundled',
   exclude: /\/node_modules\//,
   babelrc: false,
@@ -56,12 +50,12 @@ const getBabelOpts = type => ({
 
 const rollupConfig = [
   {
-    input: 'src/index.ts',
+    input,
     output: { name, file: pkg.main, format: 'cjs' },
     plugins: [typescript2(tsOpts), babel(getBabelOpts('cjs'))],
   },
   {
-    input: 'src/index.ts',
+    input,
     output: { name, file: pkg.module, format: 'es' },
     plugins: [typescript2(tsOpts), babel(getBabelOpts('es'))],
     external: [/@babel\/runtime/],
